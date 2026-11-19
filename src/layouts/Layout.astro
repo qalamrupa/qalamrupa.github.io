@@ -24,8 +24,15 @@ const current = Astro.url.pathname;
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="description" content={description} />
 		<meta name="generator" content={Astro.generator} />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
+		<link rel="icon" type="image/png" sizes="48x48" href="/brand/favicon-qalam-rupa.png" />
+		<link rel="apple-touch-icon" href="/brand/favicon-qalam-rupa.png" />
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="Qalam Rupa" />
+		<meta property="og:title" content={fullTitle} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={new URL(Astro.url.pathname, Astro.site)} />
+		<meta property="og:image" content={new URL('/brand/favicon-qalam-rupa.png', Astro.site)} />
+		<meta name="twitter:card" content="summary" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
