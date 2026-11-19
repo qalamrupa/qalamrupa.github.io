@@ -1,0 +1,113 @@
+---
+import '../styles/global.css';
+
+interface Props {
+	title: string;
+	description?: string;
+}
+
+const { title, description = 'Qalam Rupa — karya kaligrafi dan rupa.' } = Astro.props;
+const fullTitle = title === 'Beranda' ? 'Qalam Rupa' : `${title} · Qalam Rupa`;
+
+const nav = [
+	{ href: '/', label: 'Beranda' },
+	{ href: '/karya/', label: 'Karya' },
+	{ href: '/tentang/', label: 'Tentang' },
+	{ href: '/kontak/', label: 'Kontak' },
+];
+const current = Astro.url.pathname;
+---
+
+<html lang="id">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content={description} />
+		<meta name="generator" content={Astro.generator} />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap"
+		/>
+		<title>{fullTitle}</title>
+	</head>
+	<body>
+		<header class="kepala">
+			<div class="wadah kepala-isi">
+				<a href="/" class="merek">Qalam Rupa</a>
+				<nav aria-label="Navigasi utama">
+					<ul>
+						{
+							nav.map((item) => (
+								<li>
+									<a href={item.href} aria-current={current === item.href ? 'page' : undefined}>
+										{item.label}
+									</a>
+								</li>
+							))
+						}
+					</ul>
+				</nav>
+			</div>
+		</header>
+		<main>
+			<div class="wadah">
+				<slot />
+			</div>
+		</main>
+		<footer class="kaki">
+			<div class="wadah">© {new Date().getFullYear()} Qalam Rupa</div>
+		</footer>
+	</body>
+</html>
+
+<style>
+	.kepala {
+		border-bottom: 1px solid var(--garis);
+	}
+	.kepala-isi {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 0.5rem 1.5rem;
+		padding-top: 1.25rem;
+		padding-bottom: 1.25rem;
+	}
+	.merek {
+		font-family: var(--font-judul);
+		font-size: 1.5rem;
+		font-weight: 600;
+		color: var(--tinta);
+		text-decoration: none;
+	}
+	nav ul {
+		list-style: none;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1.25rem;
+		margin: 0;
+		padding: 0;
+	}
+	nav a {
+		color: var(--tinta);
+		text-decoration: none;
+		font-weight: 500;
+	}
+	nav a:hover,
+	nav a[aria-current='page'] {
+		color: var(--aksen);
+	}
+	nav a[aria-current='page'] {
+		text-decoration: underline;
+	}
+	.kaki {
+		border-top: 1px solid var(--garis);
+		padding: 1.5rem 0;
+		font-size: 0.9rem;
+		color: rgba(27, 42, 58, 0.65);
+	}
+</style>
