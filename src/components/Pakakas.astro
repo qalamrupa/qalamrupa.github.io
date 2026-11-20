@@ -1,5 +1,6 @@
 ---
-// Lencana Pakakas: tools yang pernah dicoba di AI Lab.
+// Lencana Pakakas ("Checklist tools"): tools yang pernah dicoba di AI Lab.
+// Tampil berjajar (tanpa judul kategori), terbaru di depan; kategori jadi tooltip.
 // Sumber: vault/pakakas/*.md (hanya publik: ya), disalin ke src/data/pakakas/.
 // Isi tiap file HANYA: ngaran, kategori, tanggal, publik.
 
@@ -21,39 +22,25 @@ const lencana = Object.values(modul)
 const formatTanggal = (d: Date) =>
 	d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
 
-// Kelompokkan per kategori; kategori dengan lencana terbaru tampil paling atas.
-const kelompok = new Map<string, typeof lencana>();
-for (const l of lencana) {
-	if (!kelompok.has(l.kategori)) kelompok.set(l.kategori, []);
-	kelompok.get(l.kategori)!.push(l);
-}
 ---
 
 <section class="pakakas" aria-labelledby="judul-pakakas">
-	<h2 id="judul-pakakas">Pakakas</h2>
-	<p class="pakakas-lead">Tools yang pernah dicoba di lab — penanda perjalanan belajar.</p>
+	<h2 id="judul-pakakas">Checklist tools</h2>
 
 	{
 		lencana.length === 0 ? (
 			<p class="catetan">Belum ada tools yang dicatat.</p>
 		) : (
-			<div class="pakakas-kelompok">
-				{[...kelompok].map(([kategori, daftar]) => (
-					<div class="kelompok">
-						<h3>{kategori}</h3>
-						<ul class="lencana-daftar">
-							{daftar.map((l) => (
-								<li class="lencana">
-									<span class="lencana-ngaran">{l.ngaran}</span>
-									<time class="lencana-tanggal" datetime={l.waktu.toISOString().slice(0, 10)}>
-										{formatTanggal(l.waktu)}
-									</time>
-								</li>
-							))}
-						</ul>
-					</div>
+			<ul class="lencana-daftar">
+				{lencana.map((l) => (
+					<li class="lencana" title={l.kategori}>
+						<span class="lencana-ngaran">{l.ngaran}</span>
+						<time class="lencana-tanggal" datetime={l.waktu.toISOString().slice(0, 10)}>
+							{formatTanggal(l.waktu)}
+						</time>
+					</li>
 				))}
-			</div>
+			</ul>
 		)
 	}
 </section>
@@ -66,24 +53,7 @@ for (const l of lencana) {
 	}
 	.pakakas h2 {
 		font-size: 1.5rem;
-		margin-bottom: 0.3em;
-	}
-	.pakakas-lead {
-		margin: 0 0 1.5rem;
-		color: rgba(27, 42, 58, 0.75);
-	}
-	.pakakas-kelompok {
-		display: grid;
-		gap: 1.5rem;
-	}
-	.kelompok h3 {
-		font-family: var(--font-teks);
-		font-size: 0.85rem;
-		font-weight: 600;
-		letter-spacing: 0.06em;
-		text-transform: uppercase;
-		color: var(--aksen);
-		margin: 0 0 0.6rem;
+		margin-bottom: 1rem;
 	}
 	.lencana-daftar {
 		list-style: none;
