@@ -1,6 +1,6 @@
 ---
 // Lencana Pakakas ("Checklist tools"): tools yang pernah dicoba di AI Lab.
-// Tampil berjajar (tanpa judul kategori), terbaru di depan; kategori jadi tooltip.
+// Publik hanya nama tool (berjajar, terbaru di depan); kategori jadi tooltip, tanggal hanya untuk urutan.
 // Sumber: vault/pakakas/*.md (hanya publik: ya), disalin ke src/data/pakakas/.
 // Isi tiap file HANYA: ngaran, kategori, tanggal, publik.
 
@@ -19,9 +19,6 @@ const lencana = Object.values(modul)
 	.map((l) => ({ ...l, waktu: new Date(l.tanggal) }))
 	.sort((a, b) => b.waktu.getTime() - a.waktu.getTime());
 
-const formatTanggal = (d: Date) =>
-	d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
-
 ---
 
 <section class="pakakas" aria-labelledby="judul-pakakas">
@@ -33,12 +30,7 @@ const formatTanggal = (d: Date) =>
 		) : (
 			<ul class="lencana-daftar">
 				{lencana.map((l) => (
-					<li class="lencana" title={l.kategori}>
-						<span class="lencana-ngaran">{l.ngaran}</span>
-						<time class="lencana-tanggal" datetime={l.waktu.toISOString().slice(0, 10)}>
-							{formatTanggal(l.waktu)}
-						</time>
-					</li>
+					<li class="lencana" title={l.kategori}>{l.ngaran}</li>
 				))}
 			</ul>
 		)
@@ -64,20 +56,11 @@ const formatTanggal = (d: Date) =>
 		padding: 0;
 	}
 	.lencana {
-		display: inline-flex;
-		align-items: baseline;
-		gap: 0.5rem;
 		padding: 0.4rem 0.95rem;
 		border: 1px solid var(--tinta);
 		border-radius: 999px;
-		line-height: 1.3;
-	}
-	.lencana-ngaran {
-		font-weight: 600;
 		font-size: 0.95rem;
-	}
-	.lencana-tanggal {
-		font-size: 0.8rem;
-		color: rgba(27, 42, 58, 0.65);
+		font-weight: 600;
+		line-height: 1.3;
 	}
 </style>

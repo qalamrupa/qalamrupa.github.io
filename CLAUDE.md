@@ -15,7 +15,7 @@ Repo `qalamrupa/qalamrupa.github.io` → https://qalamrupa.github.io (Astro, dep
   hasil kreatif, lencana Pakakas (nama, kategori, tanggal — dari `vault\pakakas\`, hanya `publik: ya`).
 - Lencana Pakakas disalin ke `src/data/pakakas/<tool>.md` (file sama persis dari vault, hanya yang `publik: ya`);
   ditampilkan oleh `src/components/Pakakas.astro` di halaman Karya dengan judul publik **"Checklist tools"**
-  (lencana berjajar, tanpa sub judul/judul kategori). Istilah internal tetap "pakakas". Tool baru di vault → salin juga ke sini.
+  (lencana berjajar, hanya nama tool — tanpa tanggal, sub judul, atau judul kategori). Istilah internal tetap "pakakas". Tool baru di vault → salin juga ke sini.
 - Tidak pernah tampil: log mentah, error, path PC, sandbox, antrian ide, proyek kantor/klien, XP/streak.
 
 ## Gaya
