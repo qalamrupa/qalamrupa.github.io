@@ -16,6 +16,9 @@ Repo `qalamrupa/qalamrupa.github.io` → https://qalamrupa.github.io (Astro, dep
 - Lencana Pakakas disalin ke `src/data/pakakas/<tool>.md` (file sama persis dari vault, hanya yang `publik: ya`);
   ditampilkan oleh `src/components/Pakakas.astro` di halaman Karya dengan judul publik **"Checklist tools"**
   (lencana berjajar, hanya nama tool — tanpa tanggal, sub judul, atau judul kategori). Istilah internal tetap "pakakas". Tool baru di vault → salin juga ke sini.
+- Bookmark: frontmatter `vault\bookmark\<nama>.md` yang `publik: ya` disalin ke `src/data/bookmark/<nama>.md`
+  (HANYA frontmatter — catatan pribadi di bawahnya tidak pernah disalin), tampil di `/bookmark/` (`src/pages/bookmark.astro`).
+  Kolom: judul, link, kategori, alesan (±6 kata), pilihan (ya/henteu), tanggal, publik. Tanpa label harga.
 - Tidak pernah tampil: log mentah, error, path PC, sandbox, antrian ide, proyek kantor/klien, XP/streak.
 
 ## Gaya
