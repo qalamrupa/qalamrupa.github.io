@@ -23,6 +23,9 @@ function buatModelManuk(): THREE.Group {
 		shapes.push(...SVGLoader.createShapes(path));
 	}
 
+	const grup = new THREE.Group();
+	if (shapes.length === 0) return grup;
+
 	const geometri = new THREE.ExtrudeGeometry(shapes, {
 		depth: 7,
 		bevelEnabled: true,
@@ -44,7 +47,6 @@ function buatModelManuk(): THREE.Group {
 	});
 
 	const mesh = new THREE.Mesh(geometri, bahan);
-	const grup = new THREE.Group();
 	grup.add(mesh);
 
 	// Skala: tinggi model ±3 unit.
@@ -102,6 +104,12 @@ export function init(root: HTMLElement) {
 	scene.add(pinggir);
 
 	const manuk = buatModelManuk();
+	// Path kuning tidak terbaca (mis. SVG logo diganti) → batal, logo statis tetap tampil.
+	if (manuk.children.length === 0) {
+		renderer.dispose();
+		renderer.domElement.remove();
+		return;
+	}
 	const poros = new THREE.Group(); // dimiringkan oleh interaksi
 	poros.add(manuk);
 	scene.add(poros);
