@@ -1,0 +1,152 @@
+---
+// Hero Beranda: manuk & dahan 3D (Three.js) + teks HTML.
+// Logo SVG statis tampil dulu; 3D dimuat setelah halaman siap.
+// Jika prefers-reduced-motion atau WebGL tidak ada → tetap logo statis.
+import logo from '../assets/favicon-qalam-rupa-180.svg';
+---
+
+<section class="hero" data-hero-manuk>
+	<div class="hero-isi">
+		<div class="hero-teks">
+			<h1>Qalam Rupa</h1>
+			<p class="hero-lead">Ruang berkarya visual — terus belajar, terus berkembang.</p>
+			<a class="tombol" href="/karya/">Lihat karya</a>
+		</div>
+		<div class="hero-visual">
+			<img
+				class="hero-statis"
+				src={logo.src}
+				width="180"
+				height="180"
+				alt="Logo Qalam Rupa: burung di atas dahan"
+			/>
+			<div class="hero-kanvas" aria-hidden="true"></div>
+		</div>
+	</div>
+</section>
+
+<script>
+	const root = document.querySelector<HTMLElement>('[data-hero-manuk]');
+
+	function adaWebGL() {
+		try {
+			const c = document.createElement('canvas');
+			return !!(window.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl')));
+		} catch {
+			return false;
+		}
+	}
+
+	const geraknyaDikurangi = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	if (root && !geraknyaDikurangi && adaWebGL()) {
+		const mulai = () => {
+			import('../scripts/heroManuk3d')
+				.then((m) => m.init(root))
+				.catch((err) => console.warn('Hero 3D gagal dimuat, memakai logo statis.', err));
+		};
+		const saatSenggang = () =>
+			'requestIdleCallback' in window
+				? window.requestIdleCallback(mulai, { timeout: 1500 })
+				: setTimeout(mulai, 200);
+
+		if (document.readyState === 'complete') saatSenggang();
+		else window.addEventListener('load', saatSenggang, { once: true });
+	}
+</script>
+
+<style>
+	.hero {
+		background: #1b2a3a;
+		color: var(--latar);
+		overflow: hidden;
+	}
+	.hero-isi {
+		max-width: 960px;
+		margin: 0 auto;
+		padding: 3rem clamp(16px, 5vw, 56px);
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 1.5rem;
+		align-items: center;
+	}
+	.hero-teks h1 {
+		color: var(--latar);
+		font-size: clamp(2.6rem, 8vw, 4.4rem);
+		margin-bottom: 0.4em;
+	}
+	.hero-lead {
+		font-size: 1.2rem;
+		max-width: 26em;
+		margin: 0 0 1.75rem;
+		color: rgba(246, 241, 231, 0.85);
+	}
+	.tombol {
+		display: inline-block;
+		padding: 0.75rem 1.5rem;
+		border-radius: 999px;
+		background: var(--aksen);
+		color: var(--latar);
+		font-weight: 500;
+		text-decoration: none;
+		transition:
+			background 0.2s,
+			color 0.2s;
+	}
+	.tombol:hover,
+	.tombol:focus-visible {
+		background: var(--latar);
+		color: var(--tinta);
+	}
+	.tombol:focus-visible {
+		outline: 2px solid #ffc101;
+		outline-offset: 3px;
+	}
+
+	.hero-visual {
+		position: relative;
+		width: 100%;
+		max-width: 340px;
+		aspect-ratio: 1 / 1;
+		justify-self: center;
+		display: grid;
+		place-items: center;
+	}
+	.hero-statis {
+		width: 62%;
+		height: auto;
+		border-radius: 22%;
+		transition: opacity 0.6s ease;
+	}
+	.hero-kanvas {
+		position: absolute;
+		inset: 0;
+		opacity: 0;
+		transition: opacity 0.8s ease;
+		touch-action: pan-y;
+	}
+	.hero-kanvas :global(canvas) {
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+	/* Setelah 3D siap: logo statis disembunyikan, kanvas tampil */
+	.hero:global(.hero-3d-siap) .hero-statis {
+		opacity: 0;
+	}
+	.hero:global(.hero-3d-siap) .hero-kanvas {
+		opacity: 1;
+	}
+
+	@media (min-width: 820px) {
+		.hero-isi {
+			grid-template-columns: 1fr 1fr;
+			min-height: 520px;
+			padding-top: 2rem;
+			padding-bottom: 2rem;
+		}
+		.hero-visual {
+			max-width: 480px;
+		}
+	}
+</style>
