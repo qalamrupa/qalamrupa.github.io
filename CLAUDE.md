@@ -11,6 +11,9 @@ Repo `qalamrupa/qalamrupa.github.io` → https://qalamrupa.github.io (Astro, dep
 - Semua konten berasal dari vault (`D:\qalam-rupa\vault`, repo private `qalamrupa/vault`).
 - Hanya file vault berlabel `publik: ya` yang boleh disalin ke sini (perintah "Publish: <judul>").
 - Jangan menulis konten baru langsung di sini tanpa sumber di vault.
+- Yang boleh tampil (termasuk dari AI Lab `qalamrupa/ai-lab`): tulisan Catetan Diajar, ringkasan cek keamanan,
+  hasil kreatif, lencana Pakakas (nama, kategori, tanggal — dari `vault\pakakas\`, hanya `publik: ya`).
+- Tidak pernah tampil: log mentah, error, path PC, sandbox, antrian ide, proyek kantor/klien, XP/streak.
 
 ## Gaya
 - Bahasa situs: Indonesia.
