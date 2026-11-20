@@ -13,6 +13,8 @@ Repo `qalamrupa/qalamrupa.github.io` → https://qalamrupa.github.io (Astro, dep
 - Jangan menulis konten baru langsung di sini tanpa sumber di vault.
 - Yang boleh tampil (termasuk dari AI Lab `qalamrupa/ai-lab`): tulisan Catetan Diajar, ringkasan cek keamanan,
   hasil kreatif, lencana Pakakas (nama, kategori, tanggal — dari `vault\pakakas\`, hanya `publik: ya`).
+- Lencana Pakakas disalin ke `src/data/pakakas/<tool>.md` (file sama persis dari vault, hanya yang `publik: ya`);
+  ditampilkan oleh `src/components/Pakakas.astro` di halaman Karya. Tool baru di vault → salin juga ke sini.
 - Tidak pernah tampil: log mentah, error, path PC, sandbox, antrian ide, proyek kantor/klien, XP/streak.
 
 ## Gaya

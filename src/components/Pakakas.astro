@@ -1,0 +1,113 @@
+---
+// Lencana Pakakas: tools yang pernah dicoba di AI Lab.
+// Sumber: vault/pakakas/*.md (hanya publik: ya), disalin ke src/data/pakakas/.
+// Isi tiap file HANYA: ngaran, kategori, tanggal, publik.
+
+type Lencana = {
+	ngaran: string;
+	kategori: string;
+	tanggal: string | Date;
+	publik: string | boolean;
+};
+
+const modul = import.meta.glob<{ frontmatter: Lencana }>('../data/pakakas/*.md', { eager: true });
+
+const lencana = Object.values(modul)
+	.map((m) => m.frontmatter)
+	.filter((l) => l && (l.publik === 'ya' || l.publik === true))
+	.map((l) => ({ ...l, waktu: new Date(l.tanggal) }))
+	.sort((a, b) => b.waktu.getTime() - a.waktu.getTime());
+
+const formatTanggal = (d: Date) =>
+	d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+
+// Kelompokkan per kategori; kategori dengan lencana terbaru tampil paling atas.
+const kelompok = new Map<string, typeof lencana>();
+for (const l of lencana) {
+	if (!kelompok.has(l.kategori)) kelompok.set(l.kategori, []);
+	kelompok.get(l.kategori)!.push(l);
+}
+---
+
+<section class="pakakas" aria-labelledby="judul-pakakas">
+	<h2 id="judul-pakakas">Pakakas</h2>
+	<p class="pakakas-lead">Tools yang pernah dicoba di lab — penanda perjalanan belajar.</p>
+
+	{
+		lencana.length === 0 ? (
+			<p class="catetan">Belum ada tools yang dicatat.</p>
+		) : (
+			<div class="pakakas-kelompok">
+				{[...kelompok].map(([kategori, daftar]) => (
+					<div class="kelompok">
+						<h3>{kategori}</h3>
+						<ul class="lencana-daftar">
+							{daftar.map((l) => (
+								<li class="lencana">
+									<span class="lencana-ngaran">{l.ngaran}</span>
+									<time class="lencana-tanggal" datetime={l.waktu.toISOString().slice(0, 10)}>
+										{formatTanggal(l.waktu)}
+									</time>
+								</li>
+							))}
+						</ul>
+					</div>
+				))}
+			</div>
+		)
+	}
+</section>
+
+<style>
+	.pakakas {
+		margin-top: 3rem;
+		padding-top: 2rem;
+		border-top: 1px solid var(--garis);
+	}
+	.pakakas h2 {
+		font-size: 1.5rem;
+		margin-bottom: 0.3em;
+	}
+	.pakakas-lead {
+		margin: 0 0 1.5rem;
+		color: rgba(27, 42, 58, 0.75);
+	}
+	.pakakas-kelompok {
+		display: grid;
+		gap: 1.5rem;
+	}
+	.kelompok h3 {
+		font-family: var(--font-teks);
+		font-size: 0.85rem;
+		font-weight: 600;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--aksen);
+		margin: 0 0 0.6rem;
+	}
+	.lencana-daftar {
+		list-style: none;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.6rem;
+		margin: 0;
+		padding: 0;
+	}
+	.lencana {
+		display: inline-flex;
+		align-items: baseline;
+		gap: 0.5rem;
+		padding: 0.4rem 0.95rem;
+		border: 1px solid var(--tinta);
+		border-radius: 999px;
+		line-height: 1.3;
+	}
+	.lencana-ngaran {
+		font-weight: 600;
+		font-size: 0.95rem;
+	}
+	.lencana-tanggal {
+		font-size: 0.8rem;
+		color: rgba(27, 42, 58, 0.65);
+	}
+</style>
