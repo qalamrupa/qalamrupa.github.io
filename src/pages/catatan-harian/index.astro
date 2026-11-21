@@ -30,9 +30,9 @@ const daftar = Object.entries(modul)
 	.sort((a, b) => b.waktu - a.waktu);
 ---
 
-<Layout title="Catatan Harian" description="Catatan dari dunia visual & AI: apa yang terjadi, dan apa artinya buat kita yang berkarya.">
+<Layout title="Catatan Harian" description="Artefak harian. Perkembangan dunia yang dilihat dari sudut pandang visual.">
 	<h1>Catatan Harian</h1>
-	<p class="lead">Catatan dari dunia visual &amp; AI: apa yang terjadi, dan apa artinya buat kita yang berkarya.</p>
+	<p class="lead">Artefak harian. Perkembangan dunia yang dilihat dari sudut pandang visual.</p>
 
 	{
 		daftar.length === 0 ? (
@@ -49,7 +49,6 @@ const daftar = Object.entries(modul)
 								{c.tgl}
 							</span>
 							<span class="judul">{c.judul}</span>
-							{c.ringkasan && <span class="ringkas">{c.ringkasan}</span>}
 						</a>
 					</li>
 				))}
@@ -100,9 +99,6 @@ const daftar = Object.entries(modul)
 	}
 	.kartu:hover .judul {
 		color: var(--aksen);
-	}
-	.ringkas {
-		color: rgba(27, 42, 58, 0.75);
 	}
 	@media (prefers-reduced-motion: reduce) {
 		.kartu img {
