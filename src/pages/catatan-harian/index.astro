@@ -6,6 +6,7 @@ import Layout from '../../layouts/Layout.astro';
 type Catatan = {
 	judul: string;
 	tanggal: string | Date;
+	jam?: string;
 	kategori?: string;
 	ringkasan?: string;
 	cover?: string;
@@ -27,7 +28,7 @@ const daftar = Object.entries(modul)
 			tgl: `${d.getUTCDate()} ${BULAN[d.getUTCMonth()]} ${d.getUTCFullYear()}`,
 		};
 	})
-	.sort((a, b) => b.waktu - a.waktu);
+	.sort((a, b) => b.waktu - a.waktu || String(b.jam ?? '00:00').localeCompare(String(a.jam ?? '00:00')));
 ---
 
 <Layout title="Catatan Harian" description="Artefak harian. Perkembangan dunia yang dilihat dari sudut pandang visual.">
