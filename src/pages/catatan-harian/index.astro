@@ -1,0 +1,112 @@
+---
+// Daftar Catatan Harian — tulisan dari berita visual & AI yang ditandai di Warta Rupa, diolah jadi artikel Qalam Rupa.
+// Sumber: vault/konten/*.md berlabel publik: ya, disalin ke src/data/catatan/.
+import Layout from '../../layouts/Layout.astro';
+
+type Catatan = {
+	judul: string;
+	tanggal: string | Date;
+	kategori?: string;
+	ringkasan?: string;
+	cover?: string;
+	cover_alt?: string;
+	publik: string | boolean;
+};
+
+const modul = import.meta.glob<{ frontmatter: Catatan }>('../../data/catatan/*.md', { eager: true });
+const BULAN = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+const daftar = Object.entries(modul)
+	.filter(([, m]) => m.frontmatter && (m.frontmatter.publik === 'ya' || m.frontmatter.publik === true))
+	.map(([jalur, m]) => {
+		const nama = jalur.split('/').pop()!.replace(/\.md$/, '');
+		const d = new Date(m.frontmatter.tanggal);
+		return {
+			...m.frontmatter,
+			href: `/catatan-harian/${nama.replace(/^\d{4}-\d{2}-\d{2}-/, '')}/`,
+			waktu: d.getTime() || 0,
+			tgl: `${d.getUTCDate()} ${BULAN[d.getUTCMonth()]} ${d.getUTCFullYear()}`,
+		};
+	})
+	.sort((a, b) => b.waktu - a.waktu);
+---
+
+<Layout title="Catatan Harian" description="Catatan dari dunia visual & AI: apa yang terjadi, dan apa artinya buat kita yang berkarya.">
+	<h1>Catatan Harian</h1>
+	<p class="lead">Catatan dari dunia visual &amp; AI: apa yang terjadi, dan apa artinya buat kita yang berkarya.</p>
+
+	{
+		daftar.length === 0 ? (
+			<p class="catetan">Catatan pertama segera hadir.</p>
+		) : (
+			<ul class="daftar">
+				{daftar.map((c) => (
+					<li>
+						<a class="kartu" href={c.href}>
+							{c.cover && <img src={c.cover} width="1200" height="630" alt="" loading="lazy" />}
+							<span class="meta">
+								{c.kategori && <span class="kat">{c.kategori}</span>}
+								{c.kategori && ' · '}
+								{c.tgl}
+							</span>
+							<span class="judul">{c.judul}</span>
+							{c.ringkasan && <span class="ringkas">{c.ringkasan}</span>}
+						</a>
+					</li>
+				))}
+			</ul>
+		)
+	}
+</Layout>
+
+<style>
+	.daftar {
+		list-style: none;
+		margin: 2.5rem 0 0;
+		padding: 0;
+		display: grid;
+		gap: 2.5rem;
+	}
+	.kartu {
+		display: grid;
+		gap: 0.5rem;
+		color: var(--tinta);
+		text-decoration: none;
+	}
+	.kartu img {
+		display: block;
+		width: 100%;
+		height: auto;
+		border-radius: 6px;
+		margin-bottom: 0.5rem;
+		transition: opacity 0.2s;
+	}
+	.kartu:hover img {
+		opacity: 0.88;
+	}
+	.meta {
+		font-size: 0.85rem;
+		color: rgba(27, 42, 58, 0.65);
+	}
+	.kat {
+		color: var(--aksen);
+		font-weight: 700;
+	}
+	.judul {
+		font-family: var(--font-judul);
+		font-size: 1.55rem;
+		font-weight: 600;
+		line-height: 1.2;
+		text-wrap: balance;
+	}
+	.kartu:hover .judul {
+		color: var(--aksen);
+	}
+	.ringkas {
+		color: rgba(27, 42, 58, 0.75);
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.kartu img {
+			transition: none;
+		}
+	}
+</style>

@@ -19,6 +19,11 @@ Repo `qalamrupa/qalamrupa.github.io` → https://qalamrupa.github.io (Astro, dep
 - Bookmark: frontmatter `vault\bookmark\<nama>.md` yang `publik: ya` disalin ke `src/data/bookmark/<nama>.md`
   (HANYA frontmatter — catatan pribadi di bawahnya tidak pernah disalin), tampil di `/bookmark/` (`src/pages/bookmark.astro`).
   Kolom: judul, link, kategori, alesan (±6 kata), pilihan (ya/henteu), tanggal, publik. Tanpa label harga.
+- Catatan Harian (`/catatan-harian/`): artikel dari berita Warta Rupa yang ditandai Fajar, ditulis ulang dengan suara mofajar.
+  File = salinan persis `vault\konten\<tanggal>-<slug>.md` berlabel `publik: ya` → `src/data/catatan/<tanggal>-<slug>.md`
+  (URL = nama file tanpa tanggal). Gambar di `public/catatan-harian/<slug>/` (cover 1200×630). Halaman: `src/pages/catatan-harian/`.
+  Kolom: judul, jenis, publik, tanggal, tag, kategori, ringkasan, cover, cover_alt, cover_kredit. Ikuti `vault\brand\gaya-tulisan.md`.
+  Gambar karya orang lain wajib kredit + link kreator; gambar buatan AI diberi keterangan "dibuat dengan bantuan AI".
 - Tidak pernah tampil: log mentah, error, path PC, sandbox, antrian ide, proyek kantor/klien, XP/streak.
 
 ## Gaya

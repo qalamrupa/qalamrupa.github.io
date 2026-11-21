@@ -1,0 +1,173 @@
+---
+// Satu artikel Catatan Harian.
+// Sumber: vault/konten/*.md berlabel publik: ya, disalin ke src/data/catatan/.
+import Layout from '../../layouts/Layout.astro';
+
+type Catatan = {
+	judul: string;
+	tanggal: string | Date;
+	kategori?: string;
+	ringkasan?: string;
+	cover?: string;
+	cover_alt?: string;
+	cover_kredit?: string;
+	publik: string | boolean;
+};
+
+type Modul = { frontmatter: Catatan; Content: any; rawContent: () => string; file: string };
+
+export function getStaticPaths() {
+	const modul = import.meta.glob<Modul>('../../data/catatan/*.md', { eager: true });
+	return Object.entries(modul)
+		.filter(([, m]) => m.frontmatter && (m.frontmatter.publik === 'ya' || m.frontmatter.publik === true))
+		.map(([jalur, m]) => {
+			const nama = jalur.split('/').pop()!.replace(/\.md$/, '');
+			const slug = nama.replace(/^\d{4}-\d{2}-\d{2}-/, '');
+			return { params: { slug }, props: { m } };
+		});
+}
+
+const { m } = Astro.props as { m: Modul };
+const c = m.frontmatter;
+const { Content } = m;
+const BULAN = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+const d = new Date(c.tanggal);
+const tanggal = `${d.getUTCDate()} ${BULAN[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+const teks = typeof m.rawContent === 'function' ? m.rawContent().replace(/<[^>]+>/g, ' ') : '';
+const menit = Math.max(1, Math.round(teks.split(/\s+/).filter(Boolean).length / 200));
+---
+
+<Layout title={c.judul} description={c.ringkasan} image={c.cover} type="article">
+	<article class="artikel">
+		<a class="kembali" href="/catatan-harian/">← Catatan Harian</a>
+		<p class="meta">
+			{c.kategori && <span class="kat">{c.kategori}</span>}
+			{c.kategori && ' · '}<time datetime={d.toISOString().slice(0, 10)}>{tanggal}</time> · ±{menit} menit baca
+		</p>
+		<h1>{c.judul}</h1>
+		{c.ringkasan && <p class="ringkasan">{c.ringkasan}</p>}
+		{
+			c.cover && (
+				<figure class="sampul">
+					<img src={c.cover} width="1200" height="630" alt={c.cover_alt ?? ''} />
+					{c.cover_kredit && <figcaption>{c.cover_kredit}</figcaption>}
+				</figure>
+			)
+		}
+		<div class="isi">
+			<Content />
+		</div>
+	</article>
+</Layout>
+
+<style>
+	.artikel {
+		max-width: 680px;
+	}
+	.kembali {
+		display: inline-block;
+		font-size: 0.9rem;
+		text-decoration: none;
+		margin-bottom: 1.5rem;
+	}
+	.meta {
+		font-size: 0.85rem;
+		color: rgba(27, 42, 58, 0.65);
+		margin: 0 0 0.75rem;
+	}
+	.kat {
+		color: var(--aksen);
+		font-weight: 700;
+	}
+	h1 {
+		font-size: clamp(1.9rem, 5vw, 2.8rem);
+		line-height: 1.12;
+		text-wrap: balance;
+	}
+	.ringkasan {
+		font-size: 1.12rem;
+		color: rgba(27, 42, 58, 0.72);
+		margin: 0 0 1.75rem;
+	}
+	.sampul {
+		margin: 0 0 2rem;
+	}
+	.sampul img {
+		display: block;
+		width: 100%;
+		height: auto;
+		border-radius: 6px;
+	}
+	.isi :global(h2) {
+		font-size: 1.5rem;
+		margin: 2.4rem 0 0.6rem;
+		text-wrap: balance;
+	}
+	.isi :global(p) {
+		margin: 0 0 1rem;
+	}
+	.isi :global(ol),
+	.isi :global(ul) {
+		padding-left: 1.3rem;
+		margin: 0 0 1rem;
+	}
+	.isi :global(li) {
+		margin-bottom: 0.5rem;
+	}
+	.isi :global(figure) {
+		margin: 1.6rem 0;
+	}
+	.isi :global(img) {
+		display: block;
+		width: 100%;
+		height: auto;
+		border-radius: 6px;
+	}
+	.artikel :global(figcaption) {
+		font-size: 0.8rem;
+		color: rgba(27, 42, 58, 0.65);
+		margin-top: 0.5rem;
+		line-height: 1.5;
+	}
+	.isi :global(.trio) {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 10px;
+	}
+	.isi :global(.ig) {
+		margin: 0;
+	}
+	.isi :global(.ig img) {
+		aspect-ratio: 4 / 5;
+		object-fit: cover;
+	}
+	.isi :global(.ig figcaption a) {
+		font-weight: 700;
+		text-decoration: none;
+	}
+	.isi :global(.logo-bingkai) {
+		background: #fff;
+		border: 1px solid var(--garis);
+		border-radius: 6px;
+		padding: 24px;
+		display: grid;
+		place-items: center;
+	}
+	.isi :global(.logo-bingkai img) {
+		width: auto;
+		max-width: 100%;
+		max-height: 240px;
+	}
+	@media (max-width: 600px) {
+		.isi :global(.trio) {
+			grid-template-columns: none;
+			grid-auto-flow: column;
+			grid-auto-columns: 72%;
+			overflow-x: auto;
+			scroll-snap-type: x mandatory;
+		}
+		.isi :global(.trio .ig) {
+			scroll-snap-align: start;
+		}
+	}
+</style>

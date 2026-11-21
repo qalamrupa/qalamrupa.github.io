@@ -4,19 +4,28 @@ import '../styles/global.css';
 interface Props {
 	title: string;
 	description?: string;
+	image?: string;
+	type?: 'website' | 'article';
 }
 
-const { title, description = 'Qalam Rupa — ruang berkarya visual. Terus belajar, terus berkembang.' } = Astro.props;
+const {
+	title,
+	description = 'Qalam Rupa — ruang berkarya visual. Terus belajar, terus berkembang.',
+	image = '/brand/og-qalam-rupa.jpg',
+	type = 'website',
+} = Astro.props;
 const fullTitle = title === 'Beranda' ? 'Qalam Rupa' : `${title} · Qalam Rupa`;
 
 const nav = [
 	{ href: '/', label: 'Beranda' },
 	{ href: '/karya/', label: 'Karya' },
+	{ href: '/catatan-harian/', label: 'Catatan Harian' },
 	{ href: '/bookmark/', label: 'Bookmark' },
 	{ href: '/tentang/', label: 'Tentang' },
 	{ href: '/kontak/', label: 'Kontak' },
 ];
 const current = Astro.url.pathname;
+const aktif = (href: string) => (href === '/' ? current === '/' : current.startsWith(href));
 ---
 
 <html lang="id">
@@ -28,15 +37,15 @@ const current = Astro.url.pathname;
 		<link rel="icon" href="/favicon.ico" sizes="any" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="apple-touch-icon" href="/brand/apple-touch-icon.png" />
-		<meta property="og:type" content="website" />
+		<meta property="og:type" content={type} />
 		<meta property="og:site_name" content="Qalam Rupa" />
 		<meta property="og:title" content={fullTitle} />
 		<meta property="og:description" content={description} />
 		<meta property="og:url" content={new URL(Astro.url.pathname, Astro.site)} />
-		<meta property="og:image" content={new URL('/brand/og-qalam-rupa.jpg', Astro.site)} />
+		<meta property="og:image" content={new URL(image, Astro.site)} />
 		<meta property="og:image:width" content="1200" />
 		<meta property="og:image:height" content="630" />
-		<meta property="og:image:alt" content="Qalam Rupa" />
+		<meta property="og:image:alt" content={title === 'Beranda' ? 'Qalam Rupa' : title} />
 		<meta property="og:locale" content="id_ID" />
 		<meta name="twitter:card" content="summary_large_image" />
 		<link rel="sitemap" href="/sitemap-index.xml" />
@@ -57,7 +66,7 @@ const current = Astro.url.pathname;
 						{
 							nav.map((item) => (
 								<li>
-									<a href={item.href} aria-current={current === item.href ? 'page' : undefined}>
+									<a href={item.href} aria-current={aktif(item.href) ? 'page' : undefined}>
 										{item.label}
 									</a>
 								</li>
