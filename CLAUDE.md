@@ -12,10 +12,10 @@ Repo `qalamrupa/qalamrupa.github.io` → https://qalamrupa.github.io (Astro, dep
 - Hanya file vault berlabel `publik: ya` yang boleh disalin ke sini (perintah "Publish: <judul>").
 - Jangan menulis konten baru langsung di sini tanpa sumber di vault.
 - Yang boleh tampil (termasuk dari AI Lab `qalamrupa/ai-lab`): tulisan Catetan Diajar, ringkasan cek keamanan,
-  hasil kreatif, lencana Pakakas (nama, kategori, tanggal — dari `vault\pakakas\`, hanya `publik: ya`).
+  hasil kreatif, lencana Pakakas (nama, kategori, tanggal, link sumber resmi — dari `vault\pakakas\`, hanya `publik: ya`).
 - Lencana Pakakas disalin ke `src/data/pakakas/<tool>.md` (file sama persis dari vault, hanya yang `publik: ya`);
   ditampilkan oleh `src/components/Pakakas.astro` di halaman Karya dengan judul publik **"Checklist tools"**
-  (lencana berjajar, hanya nama tool — tanpa tanggal, sub judul, atau judul kategori). Istilah internal tetap "pakakas". Tool baru di vault → salin juga ke sini.
+  (lencana berjajar, hanya nama tool — tanpa tanggal, sub judul, atau judul kategori; nama tool jadi tautan ke `sumber`, buka di tab baru, tanda ↗). Istilah internal tetap "pakakas". Tool baru di vault → salin juga ke sini.
 - Bookmark: frontmatter `vault\bookmark\<nama>.md` yang `publik: ya` disalin ke `src/data/bookmark/<nama>.md`
   (HANYA frontmatter — catatan pribadi di bawahnya tidak pernah disalin), tampil di `/bookmark/` (`src/pages/bookmark.astro`).
   Kolom: judul, link, kategori, alesan (±6 kata), pilihan (ya/henteu), tanggal, publik. Tanpa label harga.

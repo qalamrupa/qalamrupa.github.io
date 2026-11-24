@@ -2,21 +2,25 @@
 // Lencana Pakakas ("Checklist tools"): tools yang pernah dicoba di AI Lab.
 // Publik hanya nama tool (berjajar, terbaru di depan); kategori jadi tooltip, tanggal hanya untuk urutan.
 // Sumber: vault/pakakas/*.md (hanya publik: ya), disalin ke src/data/pakakas/.
-// Isi tiap file HANYA: ngaran, kategori, tanggal, publik.
+// Isi tiap file HANYA: ngaran, kategori, tanggal, sumber (link resmi tool), publik.
+// Kalau ada `sumber`, nama tool jadi tautan ke sumber itu (tab baru).
 
 type Lencana = {
 	ngaran: string;
 	kategori: string;
 	tanggal: string | Date;
+	sumber?: string;
 	publik: string | boolean;
 };
+
+const amanUrl = (u?: string) => (u && /^https:\/\//.test(u) ? u : undefined);
 
 const modul = import.meta.glob<{ frontmatter: Lencana }>('../data/pakakas/*.md', { eager: true });
 
 const lencana = Object.values(modul)
 	.map((m) => m.frontmatter)
 	.filter((l) => l && (l.publik === 'ya' || l.publik === true))
-	.map((l) => ({ ...l, waktu: new Date(l.tanggal) }))
+	.map((l) => ({ ...l, sumber: amanUrl(l.sumber), waktu: new Date(l.tanggal) }))
 	.sort((a, b) => b.waktu.getTime() - a.waktu.getTime());
 
 ---
@@ -30,7 +34,23 @@ const lencana = Object.values(modul)
 		) : (
 			<ul class="lencana-daftar">
 				{lencana.map((l) => (
-					<li class="lencana" title={l.kategori}>{l.ngaran}</li>
+					<li>
+						{l.sumber ? (
+							<a
+								class="lencana lencana-tautan"
+								href={l.sumber}
+								title={`${l.kategori} — buka sumber`}
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								{l.ngaran}
+								<span class="panah" aria-hidden="true">↗</span>
+								<span class="sr-only"> (buka sumber di tab baru)</span>
+							</a>
+						) : (
+							<span class="lencana" title={l.kategori}>{l.ngaran}</span>
+						)}
+					</li>
 				))}
 			</ul>
 		)
@@ -62,5 +82,38 @@ const lencana = Object.values(modul)
 		font-size: 0.95rem;
 		font-weight: 600;
 		line-height: 1.3;
+	}
+	.lencana-tautan {
+		display: inline-flex;
+		gap: 0.35rem;
+		min-height: 44px;
+		align-items: center;
+		color: var(--tinta);
+		text-decoration: none;
+		transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+	}
+	.lencana-tautan:hover,
+	.lencana-tautan:focus-visible {
+		color: var(--aksen);
+		border-color: var(--aksen);
+	}
+	.lencana-tautan:focus-visible {
+		outline: 2px solid var(--aksen);
+		outline-offset: 2px;
+	}
+	.panah {
+		font-size: 0.8em;
+		opacity: 0.6;
+	}
+	.sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border: 0;
 	}
 </style>
